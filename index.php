@@ -23,13 +23,16 @@
 	$user = $_SESSION['@']->getUser();
 	$selection = $_SESSION['@']->getLib();
 	$highlights = $_SESSION['@']->getHighlight();
+	//$_SESSION['@']->switch_separate();
+	$sep = $_SESSION['@']->is_separate();
 ?>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="stylesheet" type="text/css" href="style.css">
+<link rel="stylesheet" type="text/css" href="style.css" title="default">
+<link rel="stylesheet" type="text/css" href="design-2.css" title="des-2" disabled>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Rubik&display=swap" rel="stylesheet">	
@@ -87,17 +90,19 @@
 		$content =$a->getContent();
 		$text = "Content";
 		$first = true;
+		$urls = [];
 		foreach ($highlights as $url => $title)
 		{
 			if (in_array($url, $content))
 			{
+				$content = array_diff($content, [$url]);
 				$text = "More content";
 				$first = false;
-				echo "<section><h2 class='plus-padding-top'>".$title."</h2>";
+				array_push($urls, $url);
+				echo "<section><h2 class='plus-padding-top'>{$title}</h2>";
 				echo "<main>";
 				$b = new Folder($url);
-				$content = array_diff($content, [$url]);
-				create($b->getContent());
+				create($sep ? separateContent($b, $urls) : $b->getContent());
 				echo "</main></section>";
 			}
 		}
@@ -124,7 +129,7 @@
 	 	echo "<h2".($first ? " class='plus-padding-top'" : "" ).">".$text."</h2>"; ?>
 		<main>
 		<?php
-		create($content);
+		create($sep ? separateContent($a, $urls) : $content);
 		
 		/*
 		foreach ($images as $key => $value) {
@@ -183,20 +188,16 @@
 		}
 	}
 	}
-	/*
-	for (var i = 0; i < x.length; i++)
-	{
-		if(x[i].className != "image" && x[i].parentElement.className == "gallery")
-		{
-			m.insertBefore(x[i].parentElement, o);
-		}
-		else
-		{
-			m.insertBefore(x[i], o);
-		}
-		console.log(i);
-	}
-	*/
+
+	function setActiveStyleSheet(title) {
+  var i, a;
+  for(i=0; (a = document.getElementsByTagName("link")[i]); i++) {
+    if(a.getAttribute("rel").indexOf("style") != -1 && a.getAttribute("title")) {
+      a.disabled = true;
+      if(a.getAttribute("title") == title) a.disabled = false;
+    }
+  }
+}
 
 </script>
 <script type="text/javascript" src="script.js"></script>

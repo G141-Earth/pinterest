@@ -36,10 +36,23 @@ include_once 'OOP.php';
 		return $list;
 	}
 
+	function separateContent($folder, $highlight)
+	{
+		$f = $folder->getFiles();
+		echo "<hr>";
+		foreach (array_diff($folder->getFolders(), $highlight) as $key => $value)
+		{
+			$sub = new Folder($value);
+			$f = array_merge($f, $sub->getFiles());
+		}
+		sort($f);
+		return $f;
+	}
+
 	function create($array)
 	{
 		$sum = 0;
-		$tomorrow = time() - 86400;
+		$tomorrow = time() - (86400*7);
 		foreach ($array as $key => $value)
 		{
 			if (is_file($value)) 

@@ -1,0 +1,8 @@
+@import "style.css";
+
+main div
+{
+	margin: 0;
+	box-shadow: none;
+	border-radius: 0;
+}

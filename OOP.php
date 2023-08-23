@@ -7,6 +7,7 @@ include_once('function.php');
 		private $lib = [];
 		private $highlight = [];
 		private $success = false;
+		private $separate = false;
 		function __construct($user)
 		{
 			$f = new Folder(".");
@@ -53,6 +54,10 @@ include_once('function.php');
 		public function getLib() { return $this->lib; }
 
 		public function is_success() { return $this->success; }
+
+		public function is_separate() { return $this->separate; }
+
+		public function switch_separate() { $this->separate = !$this->separate; }
 
 		private function array_highlight()
 		{
