@@ -2,23 +2,27 @@
 	include_once('function.php');
 	include_once('OOP.php');
 	session_start();
-	$old = true;
-	if ((!isset($_SESSION["@"])))
-		header("Location: user.php");
-
-	if (isset($_POST["refresh"]))
-		logIn($_SESSION['@']->getUser());
-	///////////
-	if (isset($_POST['dir']) and $_SESSION['@']->setCurrent($_POST['dir']))
+	if (isset($_POST["exit"]))
 	{
-		unset($_POST['dir']);
+		unset($_POST["exit"]);
+		if (isset($_SESSION["@"]))
+			unset($_SESSION["@"]);
 	}
-	$currentName = $_SESSION['@']->getCurrent();
-	$user = $_SESSION['@']->getUser();
-	$selection = $_SESSION['@']->getLib();
-	$highlights = $_SESSION['@']->getHighlight();
-	//$_SESSION['@']->switch_separate();
-	$sep = $_SESSION['@']->is_separate();
+	$logIn = isset($_SESSION["@"]);
+	$title = $logIn ? $_SESSION['@']->getUser() : "Log in";
+	///////////
+	$users = new Folder(".");
+	$users = $users->getFolders(true);
+	$users = array_map(function($value) { return $value[count($value)-1]; }, $users);
+	if (isset($_POST["user"]) && in_array($_POST["user"], $users))
+	{
+		logIn($_POST["user"]);
+		unset($_POST["user"]);
+		$logIn = $_SESSION['@']->is_success();
+		if ($logIn)
+			header("Location: index.php");
+	}
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -34,61 +38,30 @@
 </head>
 <body>
 	<header>
-		<h1><?php echo $currentName; ?></h1>
+		<h1><?php echo $title; ?></h1>
 	</header>
 	<nav class="folders">
 	<?php
-		/*
-		$x = [];
-		PATTERNS
-		'/(^col-)/i'
-		'/(^book$)/i'
-		*/
-		echo "<form method='POST'>";
-		echo "<select name='dir'>";
-		foreach ($selection as $key => $value)
+		if(!$logIn)
 		{
-
-			//if (preg_match('/(^-)/i', $f)) { array_push($x, $f); }
-			echo "<option value='".$value."'".(strcmp($currentName, $value) == 0 ? " selected" : "").">".$value."</option>";
+			echo "<form method='POST'>";
+			echo "<select name='user'>";
+			foreach ($users as $key => $value)
+			{
+				echo "<option value='".$value."'".">".$value."</option>";
+			}
+			echo "</select>";
+			echo "<input type='submit' value='Log in'>";
+			echo "</form>";
 		}
-		echo "</select>";
-		echo "<input type='checkbox' name='today'>";
-		echo "<input type='submit' value='View'>";
-		echo "<input type='submit' value='refresh' name='refresh'>";
-		echo "</form>";
-		echo "<a href='2.php'>Uploading file</a>";
-		echo "<a href='user.php'>User</a>";
-		//var_dump($x);
+		else
+		{
+			echo "<form method='POST'>";
+			echo "<input type='submit' name='exit' value='Log out'>";
+			echo "</form>";
+		}
 	?>
 	</nav>
-	<?php
-		$a = new Folder("{$user}/{$currentName}");
-		$content =$a->getContent();
-		$text = "Content";
-		$first = true;
-		$urls = [];
-		foreach ($highlights as $url => $title)
-		{
-			if (in_array($url, $content))
-			{
-				$content = array_diff($content, [$url]);
-				$text = "More content";
-				$first = false;
-				array_push($urls, $url);
-				echo "<section><h2 class='plus-padding-top'>{$title}</h2>";
-				echo "<main>";
-				$b = new Folder($url);
-				create($sep ? separateContent($b, $urls) : $b->getContent());
-				echo "</main></section>";
-			}
-		}
-		echo "<section>";
-	 	echo "<h2".($first ? " class='plus-padding-top'" : "" ).">".$text."</h2>"; ?>
-		<main>
-		<?php
-		create($sep ? separateContent($a, $urls) : $content);
-		?>
 	</main>
 	</section>
 	<nav class="bottom"><div></div><div></div><div></div></nav>
@@ -153,7 +126,7 @@
 	<?php echo "var stepIn = ".(isset($_POST["today"]) && strcmp($_POST["today"], "on") == 0 ? "true" : "false").";";?>
 	today(stepIn);
 
-	setActiveStyleSheet("des-2");
+	setActiveStyleSheet("default");
 
 	var mains = document.querySelectorAll("main");
 	for (var i = 0; i < mains.length; i++)

@@ -8,6 +8,7 @@ include_once('function.php');
 		private $highlight = [];
 		private $success = false;
 		private $separate = false;
+		private $time = 86400;
 		function __construct($user)
 		{
 			$f = new Folder(".");
@@ -47,11 +48,20 @@ include_once('function.php');
 			return $success;
 		}
 
+		public function setTime($t)
+		{
+			$success = is_numeric($t) && $t >= 300;
+			if($success) { $this->time=$t; }
+			return $success;
+		}
+
 		public function getCurrent() { return $this->current; }
 
 		public function getUser() { return $this->user; }
 
 		public function getLib() { return $this->lib; }
+
+		public function getTime() { return $this->time; }
 
 		public function is_success() { return $this->success; }
 
@@ -108,7 +118,13 @@ include_once('function.php');
 			return is_dir($str) && $segs[count($segs)-1][0] != '.';
 		}
 
-		public function getFolders() { return array_filter($this->content, array($this,'in_folders')); }
+		public function getFolders($separate=false)
+		{
+			$f = array_filter($this->content, array($this,'in_folders'));
+			if ($separate)
+				$f = array_map(function($value) { return explode('/', $value); }, $f);
+			return $f;
+		}
 
 		public function getHidden() { return $this->hidden; }
 

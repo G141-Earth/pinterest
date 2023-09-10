@@ -49,22 +49,19 @@ include_once 'OOP.php';
 		return $f;
 	}
 
-	function create($array)
+	function create($array, $before=86400)
 	{
-		$sum = 0;
-		$tomorrow = time() - (86400*7);
+		$tomorrow = time() - $before;
 		foreach ($array as $key => $value)
 		{
 			if (is_file($value)) 
 			{
 				$array[$key] = [$value];
-				$sum = $sum + 1;
 			}
 			else
 			{
 				$f = new Folder($value);
 				$array[$key] = $f->getFiles();
-				$sum = $sum + count($array[$key]);
 			}
 			if (count($array[$key]) == 1)
 			{
@@ -99,7 +96,6 @@ include_once 'OOP.php';
 				}
 			}
 		}
-		return $sum;
 	}
 
 	function filter($name)

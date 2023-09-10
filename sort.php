@@ -35,23 +35,10 @@ include_once('x.php');
 </head>
 <body>
 	<?php
-		$root = $_SESSION["user"]."/";
-		$dir = isset($_GET["dir"]) ? $root.$_GET["dir"]."/" : $root;
-		$dir = $root.$_SESSION["cur"]."/";
-		$content = scandir($dir);
-		//$content = array_diff($content,[".", ".."]);
-		$content = array_map(function ($str) use ($dir) { return $dir.$str; }, $content);
-		$content = array_filter($content,"onlyImage");
-		$segs = [];
-		if (in_array($dir."segments.json", $content))
-		{
-			$content = array_diff($content, [$dir."segments.json"]);
-			$segs = json_decode(file_get_contents($dir."segments.json"), true);
-		}
 		
 	?>
 	<header>
-		<h1><?php echo $_SESSION["cur"]; ?></h1>
+		<h1><?php echo $currentName; ?></h1>
 	</header>
 	<nav class="folders">
 	<?php
@@ -72,35 +59,12 @@ include_once('x.php');
 	<?php
 		$text = "Content";
 		$first = true;
-		foreach ($segs as $sub => $title)
-		{
-			$subdir = $dir.$sub;
-			if (in_array($subdir, $content))
-			{
-				$text = "More content";
-				$first = false;
-				echo "<h2 class='plus-padding-top'>".$title."</h2>";
-				echo "<main>";
-				$f = null;
-				foreach ($content as $key => $value)
-				{
-					if(strcmp($value, $subdir) == 0)
-					{
-						$dirF = $subdir."/";
-						$f = scandir($value);
-						$f = array_diff($f,[".", ".."]);
-						$f = array_map(function ($str) use ($dirF) { return $dirF.$str; }, $f);
-						unset($content[$key]);
-					}
-				}
-				create($f);
-				echo "</main>";
-			}
-		}
+		$a = new Folder("{$user}/.sort");
+		$content =$a->getContent();
 	 	echo "<h2".($first ? " class='plus-padding-top'" : "" ).">".$text."</h2>"; ?>
 		<main>
 		<?php
-		create($content);
+		create(separateContent($a, []));
 		?>
 	</main>
 	<nav class="bottom"><div></div><div></div><div></div></nav>

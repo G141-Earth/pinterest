@@ -1,12 +1,13 @@
 <?php
 include_once('OOP.php');
 session_start();
-$target_dir = 'uploads';
+$target_dir = '';
 $target_file = null;
 $folder = [];
 $now = time();
 if (isset($_SESSION["@"]) && !is_null($_SESSION["@"]->getCurrent()))
 {
+  $target_dir = $_SESSION["@"]->getUser();
   $target_dir = $target_dir."/".$_SESSION["@"]->getCurrent();
   $folder = new Folder($target_dir);
   $folder = $folder->getFolders();
@@ -82,7 +83,7 @@ function uploadCheck($index, $now, $target_file)
   }
   else
   {
-    if (isset($_POST['timestap']) && is_numeric($_POST['timestap']) && $_POST['timestap']+20 >= $now)
+    if (isset($_POST['timestap']) && is_numeric($_POST['timestap']) && $_POST['timestap']+30 >= $now)
     {
       if (isset($_POST["submit"]) && move_uploaded_file($_FILES["fileToUpload"]["tmp_name"][$index], $target_file))
       {
