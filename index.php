@@ -17,7 +17,11 @@
 	$user = $_SESSION['@']->getUser();
 	$selection = $_SESSION['@']->getLib();
 	$highlights = $_SESSION['@']->getHighlight();
-	//$_SESSION['@']->switch_separate();
+	$sep = $_SESSION['@']->is_separate();
+	if ($sep)
+	{
+		$_SESSION['@']->switch_separate();
+	}
 	$sep = $_SESSION['@']->is_separate();
 ?>
 <!DOCTYPE html>
@@ -25,6 +29,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" type="text/css" href="bootstrap.css" title="">
 <link rel="stylesheet" type="text/css" href="style.css" title="default">
 <link rel="stylesheet" type="text/css" href="design-2.css" title="des-2" disabled>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -62,90 +67,43 @@
 		//var_dump($x);
 	?>
 	</nav>
+	<main>
+	<div class="container-fluid">
+	<div class="row">
+	<div class="col-md-12">
 	<?php
 		$a = new Folder("{$user}/{$currentName}");
 		$content =$a->getContent();
 		$text = "Content";
-		$first = true;
 		$urls = [];
 		foreach ($highlights as $url => $title)
 		{
 			if (in_array($url, $content))
 			{
+				$folder = explode('/', $url);
+				$folder = $folder[count($folder)-1];
 				$content = array_diff($content, [$url]);
 				$text = "More content";
-				$first = false;
 				array_push($urls, $url);
-				echo "<section><h2 class='plus-padding-top'>{$title}</h2>";
-				echo "<main>";
+				echo "<h2 class='plus-padding-top' id='{$folder}'>{$title}</h2>";
+				echo "<section>";
 				$b = new Folder($url);
 				create($sep ? separateContent($b, $urls) : $b->getContent());
-				echo "</main></section>";
+				echo "</section>";
 			}
 		}
+
+		/// last section
+		echo "<h2>{$text}</h2>";
 		echo "<section>";
-	 	echo "<h2".($first ? " class='plus-padding-top'" : "" ).">".$text."</h2>"; ?>
-		<main>
-		<?php
 		create($sep ? separateContent($a, $urls) : $content);
-		?>
+		echo "</section>";
+	?>
+	</div>
+	</div>
+	</div>
 	</main>
-	</section>
 	<nav class="bottom"><div></div><div></div><div></div></nav>
-	<section id="setting" class="content">
-		<div class="container">
-		<div class="card">
-		<div class="card-header">Featured</div>
-		<div style="overflow-y: auto; height: -webkit-fill-available;">
-			<div class="card-header">Featured</div>
-			<ul class="list-group">
-		<li class="list-group-item">An item</li>
-		<li class="list-group-item">A second item</li>
-		<li class="list-group-item">A third item</li>
-		</ul>
-		<div class="card-header">Featured</div>
-		<ul class="list-group">
-		<li class="list-group-item">An item</li>
-		<li class="list-group-item">A second item</li>
-		<li class="list-group-item">A third item</li>
-		</ul>
-		<div class="card-header">Featured</div>
-		<ul class="list-group">
-		<li class="list-group-item">An item</li>
-		<li class="list-group-item">A second item</li>
-		<li class="list-group-item">A third item</li>
-		</ul>
-		<div class="card-header">Featured</div>
-		<ul class="list-group">
-		<li class="list-group-item">An item</li>
-		<li class="list-group-item">A second item</li>
-		<li class="list-group-item">A third item</li>
-		</ul>
-		<div class="card-header">Featured</div>
-		<ul class="list-group">
-		<li class="list-group-item">An item</li>
-		<li class="list-group-item">A second item</li>
-		<li class="list-group-item">A third item</li>
-		</ul><div class="card-header">Featured</div>
-		<ul class="list-group">
-		<li class="list-group-item">An item</li>
-		<li class="list-group-item">A second item</li>
-		<li class="list-group-item">A third item</li>
-		</ul><div class="card-header">Featured</div>
-		<ul class="list-group">
-		<li class="list-group-item">An item</li>
-		<li class="list-group-item">A second item</li>
-		<li class="list-group-item">A third item</li>
-		</ul><div class="card-header">Featured</div>
-		<ul class="list-group">
-		<li class="list-group-item">An item</li>
-		<li class="list-group-item">A second item</li>
-		<li class="list-group-item">A third item</li>
-		</ul>
-		</div>
-		</div>
-		</div>
-	</section>
 </body>
 </html>
 <script type="text/javascript" src="script.js"></script>
@@ -153,7 +111,7 @@
 	<?php echo "var stepIn = ".(isset($_POST["today"]) && strcmp($_POST["today"], "on") == 0 ? "true" : "false").";";?>
 	today(stepIn);
 
-	setActiveStyleSheet("des-2");
+	setActiveStyleSheet("default");
 
 	var mains = document.querySelectorAll("main");
 	for (var i = 0; i < mains.length; i++)

@@ -39,7 +39,6 @@ include_once 'OOP.php';
 	function separateContent($folder, $highlight)
 	{
 		$f = $folder->getFiles();
-		echo "<hr>";
 		foreach (array_diff($folder->getFolders(), $highlight) as $key => $value)
 		{
 			$sub = new Folder($value);
@@ -75,6 +74,7 @@ include_once 'OOP.php';
 			else if (count($array[$key]) > 1)
 			{
 				$elem = $array[$key];
+				//var_dump($elem);
 				$gIndex = -1;
 				$gSize = null;
 				$print = "";

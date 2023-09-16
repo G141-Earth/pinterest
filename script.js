@@ -61,19 +61,23 @@ function today(show)
   if(show && x.length > 0)
   {
   let s = document.createElement('section');
-  s.innerHTML = "<i><h2 class='plus-padding-top'>Today</h2></i><main></main>";
-  o = document.querySelector("section");
-  document.body.insertBefore(s,o);
-  o = document.querySelector("main");
+  let h2 = document.createElement('h2');
+  h2.innerHTML = "Today";
+  h2.style.fontStyle = "italic";
+  let r = document.querySelector("h2");
+  let p = r.parentNode;
+  p.insertBefore(s,r);
+  p.insertBefore(h2,s);
+
   for (var i = 0; i < x.length; i++)
   {
     if(x[i].className != "image" && x[i].parentElement.className == "gallery")
     {
-      o.appendChild(x[i].parentElement);
+      s.appendChild(x[i].parentElement);
     }
     else
     {
-      o.appendChild(x[i]);
+      s.appendChild(x[i]);
     }
   }
   }

@@ -2,33 +2,31 @@ body
 {
 	line-height: 1.5;
 	margin: 0;
+	font-size: unset;
+	font-family: unset;
 }
 
 h1,h2
 {
-	margin: 0;
-	padding: 4px 16px;
+	margin: 15px 0;
+	padding: 0;
 	font-family: "Rubik";
 	text-align: center;
+	width: 100%;
+	display: block;
 }
 
 h1
 {
-	padding: 0;
 	text-transform: uppercase;
 	background-color: transparent;
 	color: #a83183;
 }
 
-.plus-padding-top
+section
 {
-	padding-top: 14px;
-}
-
-main
-{
-	margin: 0;
-	padding: 10px 0;
+	margin: 10px 0;
+	padding: 0;
 	width: 100%;
 	display: grid;
 	grid-template-columns: repeat(auto-fill, 250px);
@@ -36,7 +34,7 @@ main
 	justify-content: center;
 }
 
-main div
+section div
 {
 	padding: 0;
 	margin: 10px 10px;
@@ -49,7 +47,7 @@ main div
     box-shadow: 0 0 1px #00000080;
 }
 
-main div.gallery div
+section div.gallery div
 {
 	margin: 0;
 	height: 100%;
@@ -59,7 +57,7 @@ main div.gallery div
 	display: none;
 }
 
-main div:hover
+section div:hover
 {
 	cursor: pointer;
 	background-size: 125%;
@@ -72,7 +70,7 @@ main div:hover
 	100%  {opacity: 100%}
 }
 
-main div::before
+section div::before
 {
 	content: "";
 	display: block;
@@ -84,7 +82,7 @@ main div::before
 	mix-blend-mode: multiply;
 }
 
-main div::after
+section div::after
 {
 	content: "";
 	display: block;
@@ -95,17 +93,16 @@ main div::after
 	bottom: 0;
 }
 
-main div.gallery
+section div.gallery
 {
 	position: relative;
 }
 
-main div.gallery[data-index][data-coll]::before
+section div.gallery[data-index][data-coll]::before
 {
 	content: attr(data-index)"/"attr(data-coll);
-	width: 36.50px;
+	width: 60px;
 	height: unset;
-	padding: 0px 8px;
 	z-index: 1;
 	bottom: 3px;
 	left: 50%;
@@ -115,7 +112,7 @@ main div.gallery[data-index][data-coll]::before
 	position: absolute;
 	border-radius: 500px;
 	text-align: center;
-	margin-left: -18.25px;
+	margin-left: -30px;
 }
 
 header
