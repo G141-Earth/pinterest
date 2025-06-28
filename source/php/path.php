@@ -44,6 +44,18 @@ abstract class Path
 		return $this->valid;
 	}
 
+	public function is_image() : boolMessage
+	{
+		$message = new boolMessage();
+		if(!$this->valid)
+		{
+			$message->setError('Path is not valid.');
+			return $message;
+		}
+		$message->setObject(str_starts_with($this->mime, 'image'));
+		return $message;
+	}
+
 	abstract protected function validates() : boolMessage;
 
 	abstract public function equals($obj) : boolMessage;

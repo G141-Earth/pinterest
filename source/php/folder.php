@@ -2,6 +2,7 @@
 include_once 'path.php';
 include_once 'stringMessage.php';
 include_once 'boolMessage.php';
+include_once 'quiksort.php';
 
 class Folder extends Path
 {
@@ -20,19 +21,22 @@ class Folder extends Path
 	public function read() : boolMessage
 	{
 		$message = new boolMessage();
-		if(!$this->is_valid())
-		{
-			$message->setError("Folder is not valid.");
-			return $message;
-		}
-		else if($this->read)
+		if($this->read)
 		{
 			$message->setError("Folder is already read.");
 			return $message;
 		}
-		$directory = scandir($this->getAbsolutePath()->getObject());
-		$directory = array_diff($directory, ['.', '..']);
-		sort($directory, SORT_STRING | SORT_FLAG_CASE);
+		$path = $this->getAbsolutePath();
+		if(!$path->is_success())
+		{
+			$message->setError($path->getMessage());
+			return $message;
+		}
+		$directory = scandir($path->getObject());
+		$directory = array_slice($directory, 2);
+		//sort($directory, SORT_STRING | SORT_FLAG_CASE);
+		$fun = function($a,$b) {return strcmp(strtolower($a), strtolower($b))<0;};
+		quickSort($directory,0,count($directory)-1,$fun);
 		var_dump($directory);
 		$this->read=true;
 		$message->setObject(true);
