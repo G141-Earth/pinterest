@@ -11,15 +11,22 @@ class indexMessage extends Message
 		# code...
 	}
 
-	public function setObject($index, $compair)
+	public function setObject($object)
 	{
-		if(!is_integer($index) || !is_integer($compair))
+		if(is_a($object,'stdClass') && isset($object->index) && isset($object->comapir))
 		{
-			$this->setError("Attributes are incorrect in setObject function.");
+			{
+			$this->setError("Attribut is not stdClass with index and compair parameters.");
 			return;
 		}
-		$this->index = $index;
-		$this->compair = $compair;
+		}
+		if(!is_integer($object->index) || !is_integer($object->compair))
+		{
+			$this->setError("Parameters are incorrect in setObject function.");
+			return;
+		}
+		$this->index = $object->index;
+		$this->compair = $object->compair;
 		$this->error = false;
 	}
 

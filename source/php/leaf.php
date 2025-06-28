@@ -1,5 +1,5 @@
 <?php
-include_once 'quiksort.php';
+include_once 'quicksort.php';
 include_once 'search.php';
 /**
  * 
@@ -56,7 +56,7 @@ class leaf
 		var_dump(self::$array);
 		echo "<hr>";
 		echo "<hr>";
-		if(strcmp(self::$array[$ind]->old, $old)==0) { echo "**"; return; }
+		//if(strcmp(self::$array[$ind]->old, $old)==0) { echo "**"; return; }
 		//Add new element to a sorted array
 		//New mime class???
 	}

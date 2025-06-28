@@ -8,10 +8,12 @@ include_once '../source/php/leaf.php';
 $fun = function($a,$b) { return $a<$b; };
 $funLeaf = function($a,$b)
 {
-	$A = strcmp($a->getMime(), "directory") == 0 ? 0 : 1;
-	$B = strcmp($b->getMime(), "directory") == 0 ? 0 : 1;
-	if($A==$B)
+	$A = strcmp($a->getMime(), "directory") == 0 ? 0 : (str_starts_with($a->getMime(), "image") ? 1 : 2);
+	$B = strcmp($b->getMime(), "directory") == 0 ? 0 : (str_starts_with($b->getMime(), "image") ? 1 : 2);
+	if($A==$B && $A != 2)
 	{return strcmp($b->getName(), $a->getName())>0;}
+	else if($A==$B && $A == 2)
+	{{return strcmp($b->getMime(), $a->getMime())>0;}}
 	return $A<$B;
 	
 };
@@ -30,7 +32,7 @@ function write($value, $x=false)
 $a = new Folder('../libary/folder',2);
 echo "<hr>";
 //$b = new File('../../libary/856a089c5a669d8d41adbe4f571dff3b.webp',3);
-$b = new File('../libary/folder/Budapest Park Gaga.pdf',2);
+$b = new File('../libary/folder/pdf.pdf',2);
 //$b = new File('../../libary/collection/er',3);
 write($a->getRelativePath()->getObject());
 write($a->getAbsolutePath()->getObject());
@@ -46,13 +48,16 @@ leaf::add('a','A');
 leaf::add('b','A');
 leaf::add('b','B');
 write(leaf::val(),true);
-$c = new leaf('../libary/folder', 'Budapest Park Gaga.pdf');
+$c = new leaf('../libary/folder', 'pdf.pdf');
 $d = new leaf('../libary/folder', 'folder');
 $e = new leaf('../libary/folder', 'c');
 $f = new leaf('../libary/folder', 'image.png');
 $g = new leaf('../libary/folder', 'b');
 $h = new leaf('../libary/folder', 'a');
-$A = [$c,$d,$e,$f,$g,$h];
+$i = new leaf('../libary/folder', 'video.mp4');
+$j = new leaf('../libary/folder', 'gif.gif');
+$k = new leaf('../libary/folder', 'html.html');
+$A = [$c,$d,$e,$f,$g,$h,$i,$j,$k];
 write($A,true);
 quickSort($A,0, count($A)-1, $funLeaf);
 foreach ($A as $key => $value) {

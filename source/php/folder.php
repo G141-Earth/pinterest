@@ -2,7 +2,7 @@
 include_once 'path.php';
 include_once 'stringMessage.php';
 include_once 'boolMessage.php';
-include_once 'quiksort.php';
+include_once 'quicksort.php';
 
 class Folder extends Path
 {
