@@ -10,8 +10,13 @@ class boolMessage extends Message
 		# code...
 	}
 
-	public function setObject(bool $object)
+	public function setObject($object)
 	{
+		if(!is_bool($object))
+		{
+			$this->setError("Object is not a boolean in setObject function.");
+			return;
+		}
 		$this->bool = $object;
 		$this->error = false;
 	}
