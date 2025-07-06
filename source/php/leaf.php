@@ -23,6 +23,8 @@ class leaf
 		array_push($array, $name);
 		$path = implode('/', $array);
 		$this->valid = file_exists($path);
+		$info = pathinfo($path);
+		//var_dump($info);
 		$this->name = $name;
 		$this->mime = mime_content_type($path);
 	}
@@ -40,38 +42,11 @@ class leaf
 		return $this->name;
 	}
 
-	static public function add($old, $new)
+	static public function add($extension, $group)
 	{
 		self::$array = self::val();
-		$item = new stdClass();
-		$item->new = $new;
-		$item->old = $old;
-		if(count(self::$array) == 0) { array_push(self::$array, $item); return;}
-		$fun = function($i) { return $i->old; };
-		$ind = searchSortIndex(self::$array, 0, count(self::$array)-1, $item, $fun, $fun);
-		var_dump($item);
-		echo "<br>";
-		var_dump($ind);
-		echo "<br>";
-		var_dump(self::$array);
-		echo "<hr>";
-		echo "<hr>";
-		//if(strcmp(self::$array[$ind]->old, $old)==0) { echo "**"; return; }
-		//Add new element to a sorted array
-		//New mime class???
-	}
-
-	static public function sort($top)
-	{
-		if(!is_array($array))
-			return;
-		$i = 0;
-		foreach ($top as $k => $v) {
-			if(array_key_exists($k, self::$array))
-			{
-
-			}
-		}
+		self::$array[$extension] = $group;
+		//add('jpg', 'image');
 	}
 
 	static public function val()

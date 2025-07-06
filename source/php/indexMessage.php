@@ -11,9 +11,9 @@ class indexMessage extends Message
 		# code...
 	}
 
-	public function setObject($object)
+	public function setObject(stdClass $object)
 	{
-		if(is_a($object,'stdClass') && isset($object->index) && isset($object->comapir))
+		if(isset($object->index) && isset($object->comapir))
 		{
 			{
 			$this->setError("Attribut is not stdClass with index and compair parameters.");

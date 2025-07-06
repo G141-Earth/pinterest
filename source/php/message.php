@@ -9,12 +9,8 @@ abstract class Message
 		# code...
 	}
 
-	public function setError($message)
+	public function setError(string $message)
 	{
-		if (!is_string($message))
-		{
-			$message = "Message is not a string in setError function.";
-		}
 		$this->message = $message;
 		$this->error = true;
 	}
