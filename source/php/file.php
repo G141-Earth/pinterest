@@ -33,8 +33,16 @@ class File extends Leaf2
 		}
 		$this->time = filemtime($path->getObject());
 		$size = getimagesize($path->getObject());
-		$this->width = $size[0];
-		$this->height = $size[1];
+		if(is_array($size))
+		{
+			$this->width = $size[0];
+			$this->height = $size[1];
+		}
+		else
+		{
+			$this->width = 0;
+			$this->height = 0;
+		}
 		$this->read = true;
 		$message->setObject(true);
 		return $message;
