@@ -1,15 +1,15 @@
 <?php
 abstract class Message
 {
-	protected $error = false;
-	protected $message = "";
+	protected bool $error = false;
+	protected string $message = "";
 	
 	function __construct()
 	{
 		# code...
 	}
 
-	public function setError(string $message)
+	public function setError(string $message) : void
 	{
 		$this->message = $message;
 		$this->error = true;

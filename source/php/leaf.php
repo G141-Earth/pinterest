@@ -32,24 +32,24 @@ class leaf
 	public function getValid() : bool
 	{ return $this->valid; }
 
-	public function getMime()
+	public function getMime() : string
 	{
 		return $this->mime;
 	}
 
-	public function getName()
+	public function getName() : string
 	{
 		return $this->name;
 	}
 
-	static public function add($extension, $group)
+	static public function add($extension, $group) : void
 	{
 		self::$array = self::val();
 		self::$array[$extension] = $group;
 		//add('jpg', 'image');
 	}
 
-	static public function val()
+	static public function val() : Array
 	{
 		return is_null(self::$array) ? [] : self::$array;
 	}

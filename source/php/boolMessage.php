@@ -3,7 +3,7 @@ include_once 'message.php';
 
 class boolMessage extends Message
 {
-	private $bool = false;
+	private bool $bool = false;
 
 	function __construct()
 	{

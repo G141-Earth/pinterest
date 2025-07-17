@@ -1,118 +1,93 @@
 <?php
-include_once 'path.php';
-include_once 'stringMessage.php';
 include_once 'boolMessage.php';
+include_once 'intMessage.php';
+include_once 'leaf-2.php';
 
-class File extends Path
+class File extends Leaf2
 {
+	private int $time;
+	private int $width;
+	private int $height;
+	private int $size;
+
 	function __construct($path, $index)
 	{
-		if(!is_string($path))
-			return;
 		parent::__construct($path, $index);
-		$v = $this->validates();
-		$this->valid = $v->getObject();
 	}
 
-	public function getName() : stringMessage
-	{
-		$message = new stringMessage();
-		if(!$this->is_valid())
-		{
-			$message->setError("File is not valid");
-			return $message;
-		}
-		$message->setObject($this->name);
-		return $message;
-	}
-
-	public function getDirectory() : stringMessage
-	{
-		$message = new stringMessage();
-		if(!$this->is_valid())
-		{
-			$message->setError("File is not valid");
-			return $message;
-		}
-		$message->setObject($this->directory);
-		return $message;
-	}
-
-	public function getRelativePath() : stringMessage
-	{
-		$message = new stringMessage();
-		if(!$this->is_valid())
-		{
-			$message->setError("File is not valid");
-			return $message;
-		}
-		$path = [];
-		if(!empty($this->directory))
-			array_push($path, $this->directory);
-		array_push($path, $this->name);
-		$message->setObject(implode('/', $path));
-		return $message;
-	}
-
-	public function getAbsolutePath() : stringMessage
-	{
-		$message = new stringMessage();
-		if(!$this->is_valid())
-		{
-			$message->setError("File is not valid");
-			return $message;
-		}
-		$path = [];
-		if(!empty($this->root))
-			array_push($path, $this->root);
-		if(!empty($this->directory))
-			array_push($path, $this->directory);
-		array_push($path, $this->name);
-		$message->setObject(implode('/', $path));
-		return $message;
-	}
-
-	protected function validates() : boolMessage
+	#Override
+	public function read() : boolMessage
 	{
 		$message = new boolMessage();
-		if(!$this->is_valid())
+		if($this->read)
 		{
-			$message->setError("File is not valid.");
+			$message->setError('Already read file');
+			$message->setObject(true);
 			return $message;
 		}
-		if(!is_file($this->getAbsolutePath()->getObject()))
+		$path = parent::getAbsolutePath();
+		if(!$path->is_success())
 		{
-			$message->setError("File is not a file.");
+			$message->setError($path->getMessage());
 			return $message;
 		}
+		$this->time = filemtime($path->getObject());
+		$size = getimagesize($path->getObject());
+		$this->width = $size[0];
+		$this->height = $size[1];
+		$this->read = true;
 		$message->setObject(true);
 		return $message;
 	}
 
-	public function equals($obj) : boolMessage
+	public function getSize() : intMessage
 	{
-		$message = new boolMessage();
-		if(!is_a($obj, get_class($this)))
+		$read = $this->read();
+		$message = new intMessage();
+		if(!$read->is_success())
 		{
-			$message->setError("Object is not a file.");
+			$message->setError($read->getMessage());
 			return $message;
 		}
-		if(strcmp($this->getAbsolutePath(),$obj->getAbsolutePath()) == 0)
+		$message->setObject($this->width*$this->height);
+		return $message;
+	}
+
+	public function getWidth() : intMessage
+	{
+		$read = $this->read();
+		$message = new intMessage();
+		if(!$read->is_success())
 		{
-			$message->setError("Object is not same file.");
+			$message->setError($read->getMessage());
 			return $message;
 		}
-		if(!$this->is_valid())
+		$message->setObject($this->width);
+		return $message;
+	}
+
+	public function getHeight() : intMessage
+	{
+		$read = $this->read();
+		$message = new intMessage();
+		if(!$read->is_success())
 		{
-			$message->setError("File is not valid.");
+			$message->setError($read->getMessage());
 			return $message;
 		}
-		if(!$obj->is_valid())
+		$message->setObject($this->height);
+		return $message;
+	}
+	public function getTime() : intMessage
+	{
+		$read = $this->read();
+		$message = new intMessage();
+		if(!$read->is_success())
 		{
-			$message->setError("Object is not valid.");
+			$message->setError($read->getMessage());
 			return $message;
 		}
-		$message->setObject(true);
+		$message->setObject($this->time);
 		return $message;
 	}
 }

@@ -1,6 +1,6 @@
 <?php
 // Function to swap two elements
-function swap(&$a, &$b) {
+function swap(&$a, &$b) : void {
 	if($a === $b)
 		return;
     $temp = $a;
@@ -9,7 +9,7 @@ function swap(&$a, &$b) {
 }
 
 // Partition function
-function partition(&$arr, $low, $high,$compair) {
+function partition(&$arr, $low, $high,$compair) : int{
     
     // Choose the pivot
     $pivot = $arr[$high];
@@ -37,7 +37,7 @@ function partition(&$arr, $low, $high,$compair) {
 }
 
 // The QuickSort function implementation
-function quickSort(&$arr, $low, $high,$compair) {
+function quickSort(&$arr, $low, $high,$compair) : void{
     if ($low < $high) {
         
         // pi is the partition return index of pivot

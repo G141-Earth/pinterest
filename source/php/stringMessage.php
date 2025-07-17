@@ -3,7 +3,7 @@ include_once 'message.php';
 
 class stringMessage extends Message
 {
-	private $string = "";
+	private string $string = "";
 
 	function __construct()
 	{

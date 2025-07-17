@@ -3,8 +3,8 @@ include_once 'message.php';
 
 class indexMessage extends Message
 {
-	private $compair = null;
-	private $index = null;
+	private int $compair;
+	private int $index;
 
 	function __construct()
 	{
