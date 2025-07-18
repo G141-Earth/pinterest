@@ -1,10 +1,8 @@
 <?php
 include_once '../source/php/search.php';
-include_once '../source/php/folder.php';
-include_once '../source/php/leaf.php';
-
-$a = new Leaf('../libary','folder');
-$b = new Leaf('../libary/folder','image.png');
+include_once '../source/php/file.php';
+include_once '../source/php/leaf-2.php';
+include_once '../source/php/intMessage.php';
 
 function write($value, $x=false)
 {
@@ -15,6 +13,12 @@ function write($value, $x=false)
 	else{ echo "<br>"; }
 }
 
-write($a);
+$a = new Leaf2('../libary/folder',2);
+$b = new File('../libary/folder/image.png',2);
+$c = new File('../libary/folder/html.html',2);
+$c->read();
+write($a, true);
+write($b, true);
+write($c, true);
 
 ?>
