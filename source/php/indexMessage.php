@@ -20,7 +20,7 @@ class indexMessage extends Message
 			return;
 		}
 		}
-		if(!is_integer($object->index) || !is_integer($object->compair))
+		if(!is_numeric($object->index) || !is_numeric($object->compair))
 		{
 			$this->setError("Parameters are incorrect in setObject function.");
 			return;
@@ -33,8 +33,8 @@ class indexMessage extends Message
 	public function getObject() : stdClass
 	{
 		$obj = new stdClass();
-		$obj->compair = $this->compair;
-		$obj->index = $this->index;
+		$obj->compair = isset($this->compair) ? $this->compair : null;
+		$obj->index = isset($this->index) ? $this->index : null;
 		return $obj;
 	}
 }

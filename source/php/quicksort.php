@@ -23,7 +23,7 @@ function partition(&$arr, $low, $high,$compair) : int{
     // i are smaller after every iteration
     for ($j = $low; $j < $high; $j++)
     {
-        if ($compair($arr[$j],$pivot))
+        if ($compair($pivot,$arr[$j]))
         {
             $i++;
             swap($arr[$i], $arr[$j]);

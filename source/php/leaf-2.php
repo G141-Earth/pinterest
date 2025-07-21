@@ -1,6 +1,7 @@
 <?php
 include_once 'boolMessage.php';
 include_once 'stringMessage.php';
+include_once 'intMessage.php';
 class leaf2
 {
 	private bool $valid;
@@ -19,7 +20,7 @@ class leaf2
 		$array = explode('/', $info['dirname']);
 		$this->root = implode('/', array_slice($array,0,$index));
 		$this->folder = implode('/', array_slice($array,$index));
-		$this->name = $info['basename'];
+		$this->name = strtolower($info['basename']);
 		$this->mime = mime_content_type($path);
 		$this->read = false;
 	}
@@ -31,16 +32,24 @@ class leaf2
 		return $message;
 	}
 
-	public function getMime() : stringMessage
+	public function getMime(bool $compair=false) : stringMessage
 	{
 		$message = new stringMessage();
-		if(isset($this->mime))
-		{
-			$message->setObject($this->mime);
-		}
-		else
+		if(!isset($this->mime))
 		{
 			$message->setError("Mime is not setted");
+			return $message;
+		}
+		$message->setObject($this->mime);
+		if(!$compair) { return $message; }
+		$array = explode('.', $this->name);
+		if(count($array)<2) { return $message; }
+		$index = $array[count($array)-1];
+		$array = self::val();
+		if(isset($array[$index]))
+		{
+			$message->setObject($array[$index]);
+			return $message;
 		}
 		return $message;
 	}
@@ -107,6 +116,42 @@ class leaf2
 	static public function val() : Array
 	{
 		return !isset(self::$array) ? [] : self::$array;
+	}
+
+	public function getRootIndex() : intMessage
+	{
+		$message = new intMessage();
+		if(!isset($this->root))
+		{
+			$message->setError("Root is not setted");
+			return $message;
+		}
+		$array = explode('/', $this->root);
+		$message->setObject(count($array));
+		return $message;
+	}
+
+	public static function sort($b, $a) : bool
+	{
+		return self::compair($b,$a)>0;
+	}
+
+	public static function compair($b,$a) : int
+	{
+		$mimeA = $a->getMime(true)->getObject();
+		$mimeB = $b->getMime(true)->getObject();
+		$A = strcmp($mimeA, "directory") == 0 ? 0 : (str_starts_with($mimeA, "image") ? 1 : 2);
+		$B = strcmp($mimeB, "directory") == 0 ? 0 : (str_starts_with($mimeB, "image") ? 1 : 2);
+		if($A==$B && $A != 2)
+		{
+			return strcmp($b->getName()->getObject(), $a->getName()->getObject());
+		}
+		else if($A==$B && $A == 2)
+		{
+			return strcmp($mimeB, $mimeA);
+		}
+		return $B-$A;
+		
 	}
 }
 

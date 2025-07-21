@@ -5,19 +5,10 @@ include_once '../source/php/folder.php';
 include_once '../source/php/path.php';
 include_once '../source/php/leaf.php';
 include_once '../source/php/leaf-2.php';
+include_once '../source/php/search.php';
+include_once '../source/php/indexMessage.php';
 
 $fun = function($a,$b) { return $a<$b; };
-$funLeaf = function($a,$b)
-{
-	$A = strcmp($a->getMime()->getObject(), "directory") == 0 ? 0 : (str_starts_with($a->getMime()->getObject(), "image") ? 1 : 2);
-	$B = strcmp($b->getMime()->getObject(), "directory") == 0 ? 0 : (str_starts_with($b->getMime()->getObject(), "image") ? 1 : 2);
-	if($A==$B && $A != 2)
-	{return strcmp($b->getName()->getObject(), $a->getName()->getObject())>0;}
-	else if($A==$B && $A == 2)
-	{return strcmp($b->getMime()->getObject(), $a->getMime()->getObject())>0;}
-	return $A<$B;
-	
-};
 
 $x = [5,10,20,40,90,0,-20,-1];
 quickSort($x,0, count($x)-1, $fun);
@@ -60,10 +51,26 @@ $g = new leaf2('../libary/folder/b',2);
 $h = new leaf2('../libary/folder/a',2);
 $i = new leaf2('../libary/folder/video.mp4',2);
 $j = new leaf2('../libary/folder/gif.gif',2);
-$k = new File('../libary/folder/html.html',2);
-$A = [$c,$d,$e,$f,$g,$h,$i,$j,$k];
+$k = new Leaf2('../libary/folder/html.html',2);
+$A = [$d,$e,$f,$g,$h,$i,$j,$k];
 write($A,true);
-quickSort($A,0, count($A)-1, $funLeaf);
+$f1 = function ($e){ return $e; };
+$f2 = function ($a,$b){ return Leaf2::compair($a,$b); };
+quickSort($A,0, count($A)-1, array("Leaf2", "sort"));
+
+//PUT NEW ITEM IN THE CORRECT PLACE
+$y = searchSortIndex($A, 0, count($A)-1, $c, $f1, $f1, $f2,true);
+
+$n = $y->getObject()->index;
+$cmp = $y->getObject()->compair;
+$step = $cmp > 0 ? 1 : 0;
+$n=$n+$step;
+for ($l=count($A)-1; $l >= $n ; $l--) { 
+	$A[$l+1] = $A[$l];
+}
+$A[$n]=$c;
+//
+
 $extentions = leaf2::val();
 foreach ($A as $key => $value) {
 	$s = explode('/', $value->getMime()->getObject());
@@ -73,4 +80,6 @@ foreach ($A as $key => $value) {
 	write($value->getMime()->getObject()."/".$s.">".$value->getName()->getObject());
 }
 write($A,true);
+
+write($x,true);
 ?>

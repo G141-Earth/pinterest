@@ -1,7 +1,7 @@
 <?php
 include_once 'indexMessage.php';
 
-function searchSortIndex($list, $sInd, $eInd, $elem, $lFun, $eFun, $bool=false) : indexMessage
+function searchSortIndex($list, $sInd, $eInd, $elem, $lFun, $eFun, $cmp, $bool=false) : indexMessage
 {
 	$message = new indexMessage();
 	$obj = $message->getObject();
@@ -14,17 +14,18 @@ function searchSortIndex($list, $sInd, $eInd, $elem, $lFun, $eFun, $bool=false) 
 		return $message;
 	}
 	$pivot = floor(($sInd+$eInd)/2);
-	$compair = strcmp($eFun($elem), $lFun($list[$pivot]));
+	$compair = $cmp($eFun($elem), $lFun($list[$pivot]));
 	$x = new stdClass();
 	$x->e = $eFun($elem);
 	$x->c = $lFun($list[$pivot]);
 	$x->p = $pivot;
 	$x->l = [$sInd, $eInd];
 	$x->cmp = $compair;
-	if ($bool) {var_dump($x);}
+	//if ($bool) {var_dump($x);}
 	$obj->index = $pivot;
 	$obj->compair = $compair;
 	$message->setObject($obj);
+	if ($bool) {var_dump($message);}
 	if($sInd == $eInd)
 	{
 		if($compair != 0)
@@ -34,8 +35,8 @@ function searchSortIndex($list, $sInd, $eInd, $elem, $lFun, $eFun, $bool=false) 
 		return $message;
 
 	}
-	if($compair < 0) { return searchSortIndex($list, $sInd, ($pivot-1 < $sInd ? $sInd : $pivot-1), $elem, $lFun, $eFun, $bool); }
-	else if($compair > 0) { return searchSortIndex($list, ($pivot+1 > $eInd ? $eInd : $pivot+1), $eInd, $elem, $lFun, $eFun, $bool); }
+	if($compair < 0) { return searchSortIndex($list, $sInd, ($pivot-1 < $sInd ? $sInd : $pivot-1), $elem, $lFun, $eFun, $cmp, $bool); }
+	else if($compair > 0) { return searchSortIndex($list, ($pivot+1 > $eInd ? $eInd : $pivot+1), $eInd, $elem, $lFun, $eFun, $cmp, $bool); }
 	return $message;
 }
 
