@@ -1,4 +1,4 @@
-Tasks & thoughts
+#Tasks & thoughts
 
 [ ] File uncomplete reading in constuctor like in folder class
 [ ] Folders are string (?)

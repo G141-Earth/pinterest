@@ -27,7 +27,7 @@ class leaf2
 
 	public function getValid() : boolMessage
 	{
-		$message = new stringMessage();
+		$message = new boolMessage();
 		$message->setObject($this->valid);
 		return $message;
 	}

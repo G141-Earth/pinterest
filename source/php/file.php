@@ -25,6 +25,14 @@ class File extends Leaf2
 			$message->setObject(true);
 			return $message;
 		}
+		$validMessage = parent::getValid();
+		$valid = $validMessage->getObject();
+		if(!$valid)
+		{
+			$message->setError($validMessage->getMessage());
+			$message->setObject(false);
+			return $message;
+		}
 		$path = parent::getAbsolutePath();
 		if(!$path->is_success())
 		{
