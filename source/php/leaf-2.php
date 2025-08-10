@@ -29,6 +29,8 @@ class leaf2
 	{
 		$message = new boolMessage();
 		$message->setObject($this->valid);
+		if(!$this->valid)
+			$message->setError('not valid object');
 		return $message;
 	}
 
@@ -70,13 +72,13 @@ class leaf2
 
 	public function getAbsolutePath() : stringMessage
 	{
-		$relative = $this->getRelativePath();
-		if(!$relative->is_success())
-		{return $relative;}
 		$message = new stringMessage();
+		$relative = $this->getRelativePath();
+		$error = !$message->check($relative);
+		if($error){return $message;}
 		if(!isset($this->root))
 		{
-			$message->setError("properties are not setted");
+			$message->setError("Root is not setted");
 			return $message;
 		}
 		$message->setObject($this->root.'/'.$relative->getObject());
@@ -131,12 +133,12 @@ class leaf2
 		return $message;
 	}
 
-	public static function sort($b, $a) : bool
+	public static function sort(Leaf2 $b, Leaf2 $a) : bool
 	{
 		return self::compair($b,$a)>0;
 	}
 
-	public static function compair($b,$a) : int
+	public static function compair(Leaf2 $b,Leaf2 $a) : int
 	{
 		$mimeA = $a->getMime(true)->getObject();
 		$mimeB = $b->getMime(true)->getObject();

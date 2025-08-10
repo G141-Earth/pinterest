@@ -28,15 +28,12 @@ class Folder extends Leaf2
 		$valid = $validMessage->getObject();
 		if(!$valid)
 		{
-			$message->setError($validMessage->getMessage());
+			$message->setError('Not valid folder');
 			return $message;
 		}
 		$path = parent::getAbsolutePath();
-		if(!$path->is_success())
-		{
-			$message->setError($path->getMessage());
-			return $message;
-		}
+		$error = !$message->check($path);
+		if($error){ return $message; }
 		$path = $path->getObject();
 		$this->content = array_slice(scandir($path), 2);
 		sort($this->content, SORT_STRING | SORT_FLAG_CASE);

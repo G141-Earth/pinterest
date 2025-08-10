@@ -25,6 +25,16 @@ abstract class Message
 		return !$this->error;
 	}
 
+	public function check(Message $message) : bool
+	{
+		$success = $message->is_success();
+		if(!$success)
+		{
+			$this->setError($message->getMessage());
+		}
+		return $success;
+	}
+
 	abstract public function setObject($object);
 
 	abstract public function getObject();

@@ -1,8 +1,9 @@
-<?php
+  <?php
 
 include_once 'leaf-2.php';
 include_once 'file.php';
 include_once 'folder.php';
+include_once 'leafMessage.php';
 
 class factory
 {
@@ -12,37 +13,50 @@ class factory
 		# code...
 	}
 
-	public static function create(string $class, string $path, int $index) : Leaf2
+	public static function create(string $class, string $path, int $index) : leafMessage
 	{
+		$message = new leafMessage();
 		if(strcmp($class, 'file')==0)
 		{
-			return new File($path, $index);
+			$message->setObject(new File($path, $index));
+			return $message;
 		}
 		else if(strcmp($class, 'folder')==0)
 		{
-			return new Folder($path, $index);
+			$message->setObject(new Folder($path, $index));
+			return $message;
 		}
-		return new Leaf2($path, $index);
+		$message->setObject(new Leaf2($path, $index));
+		return $message;
 	}
 
-	public static function evolve(Leaf2 $obj, bool $folder=false) : Leaf2
+	public static function evolve(Leaf2 $obj, bool $folder=false) : leafMessage
 	{
-		//is_success check 3 times
+		$messageMain = new leafMessage();
+		$message = $obj->getValid();
+		$error = !$messageMain->check($message);
+		if($error){ return $messageMain; }
 		$message = $obj->getMime();
+		$error = !$messageMain->check($message);
+		if($error){ return $messageMain; }
 		$mime = $message->getObject();
 		$message = $obj->getAbsolutePath();
+		$error = !$messageMain->check($message);
+		if($error){ return $messageMain; }
 		$path = $message->getObject();
 		$message = $obj->getRootIndex();
+		$error = !$messageMain->check($message);
+		if($error){ return $messageMain; }
 		$index = $message->getObject();
 		if(strcmp('directory', $mime) == 0 && $folder)
 		{
-			return new Folder($path, $index);
+			$messageMain->setObject(new Folder($path, $index));
 		}
 		else if(strcmp('directory', $mime) != 0)
 		{
-			return new File($path, $index);
+			$messageMain->setObject(new File($path, $index));
 		}
-		return $obj;
+		return $messageMain;
 	}
 }
 

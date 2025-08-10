@@ -26,17 +26,15 @@ class File extends Leaf2
 			return $message;
 		}
 		$validMessage = parent::getValid();
-		$valid = $validMessage->getObject();
-		if(!$valid)
+		$error = !$message->check($validMessage);
+		if($error)
 		{
-			$message->setError($validMessage->getMessage());
-			$message->setObject(false);
 			return $message;
 		}
 		$path = parent::getAbsolutePath();
-		if(!$path->is_success())
+		$error = !$message->check($path);
+		if($error)
 		{
-			$message->setError($path->getMessage());
 			return $message;
 		}
 		$this->time = filemtime($path->getObject());
@@ -58,11 +56,11 @@ class File extends Leaf2
 
 	public function getSize() : intMessage
 	{
-		$read = $this->read();
 		$message = new intMessage();
-		if(!$read->is_success())
+		$read = $this->read();
+		$error = !$message->check($read);
+		if($error)
 		{
-			$message->setError($read->getMessage());
 			return $message;
 		}
 		$message->setObject($this->width*$this->height);
@@ -71,11 +69,11 @@ class File extends Leaf2
 
 	public function getWidth() : intMessage
 	{
-		$read = $this->read();
 		$message = new intMessage();
-		if(!$read->is_success())
+		$read = $this->read();
+		$error = !$message->check($read);
+		if($error)
 		{
-			$message->setError($read->getMessage());
 			return $message;
 		}
 		$message->setObject($this->width);
@@ -84,11 +82,11 @@ class File extends Leaf2
 
 	public function getHeight() : intMessage
 	{
-		$read = $this->read();
 		$message = new intMessage();
-		if(!$read->is_success())
+		$read = $this->read();
+		$error = !$message->check($read);
+		if($error)
 		{
-			$message->setError($read->getMessage());
 			return $message;
 		}
 		$message->setObject($this->height);
@@ -96,11 +94,11 @@ class File extends Leaf2
 	}
 	public function getTime() : intMessage
 	{
-		$read = $this->read();
 		$message = new intMessage();
-		if(!$read->is_success())
+		$read = $this->read();
+		$error = !$message->check($read);
+		if($error)
 		{
-			$message->setError($read->getMessage());
 			return $message;
 		}
 		$message->setObject($this->time);
