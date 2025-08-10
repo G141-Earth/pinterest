@@ -18,17 +18,14 @@ class Folder extends Leaf2
 	public function read() : boolMessage
 	{
 		$message = new boolMessage();
+		$validMessage = parent::getValid();
+		$error = !$message->check($validMessage);
+		if($error)
+			return $message;
 		if($this->read)
 		{
 			$message->setError('Already read folder');
 			$message->setObject(true);
-			return $message;
-		}
-		$validMessage = parent::getValid();
-		$valid = $validMessage->getObject();
-		if(!$valid)
-		{
-			$message->setError('Not valid folder');
 			return $message;
 		}
 		$path = parent::getAbsolutePath();
