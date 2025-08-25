@@ -1,19 +1,43 @@
 <?php
-include_once '../source/php/leaf-2.php';
-include_once '../source/php/leafMessage.php';
+include_once '../source/php/database.php';
 include_once '../source/php/boolMessage.php';
 include_once '../source/php/factory.php';
+include_once '../source/php/search.php';
 
-$messageMain = new boolMessage();
-$a = Factory::create('', '../libary/test.tx',2);
-$a = $a->getObject();
-$c;
-$a = Factory::evolve($a);
-$b = $messageMain->check($a);
-var_dump($a);
-echo "<hr>";
-var_dump($messageMain)
-//$b = Factory::evolve();
+$b = new boolMessage();
+$d = new Database();
+$p = $d->detect("");
+$f = Factory::create('folder','../libary/',2);
+$error = !$b->check($f);
+if($error)
+{echo "0"; die;}
+$f = $f->getObject();
+$c = $f->getContent();
+
+$lFun = function ($e)
+{
+	return $e;
+};
+$eFun = function ($e)
+{
+	$name = $e->getName();
+	return $name->getObject();
+
+};
+$cmp = function ($a, $b)
+{
+	return strcmp($a, $b);
+};
+foreach ($p as $key => $value) {
+	$x = searchSortIndex($c, 0, count($c)-1, $value, $lFun, $eFun, $cmp);
+	$obj = $x->getObject();
+	$index = $obj->index;
+	if($x->is_success())
+	{
+		$p[$key]->fileMaker();
+	}
+	echo "<hr>";
+}
 
 
 ?>

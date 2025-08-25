@@ -74,5 +74,15 @@ class Folder extends Leaf2
 		$message->setObject(true);
 		return $message;
 	}
+
+	public function getContent() : Array
+	{
+		$m = $this->read();
+		if(!$m->is_success())
+		{ return []; }
+		else if(!isset($this->content))
+		{ return []; }
+		return $this->content;
+	}
 }
 ?>

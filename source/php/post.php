@@ -111,7 +111,12 @@ class post
 
 	public function fileMaker() : boolMessage
 	{
-		$this->file = Factory::create('file', '../libary/'.$this->relativePath, 2);
+		$message = new boolMessage();
+		$try = Factory::create('file', '../libary/'.$this->relativePath, 2);
+		$error = !$message->check($try);
+		if($error)
+		{ return $message; }
+		$this->file = $try->getObject();
 		return $this->file->getValid();
 	}
 
